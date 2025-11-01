@@ -1,0 +1,61 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: hankcp/postgres-ext:17.6
+      env:
+        POSTGRES_USER: postgres
+        POSTGRES_HOST_AUTH_METHOD: trust
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install Postgres extension
+      run: |
+        pig ext add pgtap -y
+        pig ext add http -y
+        pig ext add pg_vector -y
+        pig ext add pg_background -y
+
+    - name: Start PostgreSQL
+      run: |
+        mkdir -p /var/lib/postgresql/data
+        chown -R postgres:postgres /var/lib/postgresql/data
+        gosu postgres /usr/lib/postgresql/17/bin/initdb -D /var/lib/postgresql/data
+        gosu postgres /usr/lib/postgresql/17/bin/pg_ctl -D /var/lib/postgresql/data start -w
+
+    - name: Setup test environment
+      env:
+        SILICONFLOW_API_KEY: ${{ secrets.SILICONFLOW_API_KEY }}
+      run: |
+        cp test/.env.example test/.env
+        sed -i "s/your-api-key/$SILICONFLOW_API_KEY/g" test/.env
+        echo "Test environment configured"
+
+    - name: Run test script
+      id: test
+      run: |
+        chmod +x test/runner.sh
+        ./test/runner.sh --host localhost --user postgres | tee test_output.log
+
+    - name: Test Summary
+      if: always()
+      run: |
+        if grep -q "=== Test completed successfully ===" test_output.log; then
+          echo "✓ Tests passed"
+          exit 0
+        elif grep -q "=== Tests FAILED ===" test_output.log; then
+          echo "✗ Tests failed"
+          exit 1
+        else
+          echo "⚠ Test status unknown"
+          exit 1
+        fi

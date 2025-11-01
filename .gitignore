@@ -1,0 +1,22 @@
+# Test environment files
+test/.env
+
+# Build artifacts
+*.o
+*.so
+*.bc
+*.a
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Ai code assistant
+.qoder
