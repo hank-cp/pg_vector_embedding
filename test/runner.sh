@@ -61,7 +61,7 @@ echo ""
 echo "=== Creating test database: $TEST_DB ==="
 $PSQL_CMD -d postgres -c "CREATE DATABASE $TEST_DB;"
 
-# Load test.env and set database configurations
+# Load .env and set database configurations
 ENV_FILE="$(dirname "$0")/.env"
 if [ -f "$ENV_FILE" ]; then
     echo ""
@@ -78,12 +78,13 @@ if [ -f "$ENV_FILE" ]; then
             # Convert EMBEDDING_URL to pg_vector_embedding.embedding_url
             db_key=$(echo "$key" | tr '[:upper:]' '[:lower:]' | sed 's/^/pg_vector_embedding./')
             echo "Setting $db_key"
-            $PSQL_CMD -d "$TEST_DB" -c "ALTER DATABASE $TEST_DB SET $db_key = '$value';" || true
+            $PSQL_CMD -d "$TEST_DB" -c "ALTER SYSTEM SET $db_key = '$value';" || true
+            $PSQL_CMD -d "$TEST_DB" -c "SET $db_key = '$value';" || true
         fi
     done < "$ENV_FILE"
 else
     echo ""
-    echo "=== Warning: test.env not found, skipping configuration ==="
+    echo "=== Warning: .env not found, skipping configuration ==="
 fi
 
 cleanup() {

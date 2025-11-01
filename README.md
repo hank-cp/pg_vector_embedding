@@ -1,6 +1,13 @@
+![GitHub Release](https://img.shields.io/github/v/release/hank-cp/pg_vector_embedding)
+[![Tests](https://github.com/hank-cp/pg_vector_embedding/actions/workflows/test.yml/badge.svg)](https://github.com/hank-cp/pg_vector_embedding/actions/workflows/test.yml)
+![GitHub](https://img.shields.io/github/license/hank-cp/pg_vector_embedding.svg)
+![GitHub last commit](https://img.shields.io/github/last-commit/hank-cp/pg_vector_embedding.svg)
+
 # pg_vector_embedding
 
 PostgreSQL extension for automatic vector embedding using external embedding services.
+
+[中文文档](README.zh-cn.md)
 
 ## Features
 

@@ -1,3 +1,7 @@
+![GitHub Release](https://img.shields.io/github/v/release/hank-cp/pg_vector_embedding)
+[![Tests](https://github.com/hank-cp/pg_vector_embedding/actions/workflows/test.yml/badge.svg)](https://github.com/hank-cp/pg_vector_embedding/actions/workflows/test.yml)
+![GitHub](https://img.shields.io/github/license/hank-cp/pg_vector_embedding.svg)
+![GitHub last commit](https://img.shields.io/github/last-commit/hank-cp/pg_vector_embedding.svg)
 # pg_vector_embedding
 
 PostgreSQL 扩展，用于使用外部嵌入服务自动生成向量嵌入。
