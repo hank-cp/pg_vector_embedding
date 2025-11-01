@@ -6,7 +6,7 @@ CREATE EXTENSION IF NOT EXISTS pg_background;
 CREATE EXTENSION IF NOT EXISTS vector;
 CREATE EXTENSION IF NOT EXISTS pg_vector_embedding;
 
-SELECT plan(17);
+SELECT plan(20);
 
 SELECT has_function('ve_config', ARRAY['text'], 've_config function should exist');
 SELECT has_function('ve_enable', ARRAY['text', 'text', 'text[]', 'text'], 've_enable function should exist');
@@ -20,6 +20,24 @@ SELECT ok(
     ve_config('embedding_url') IS NOT NULL AND ve_config('embedding_url') != '',
     'Config should be set and retrieved correctly via current_setting'
 );
+
+SELECT is(
+         ve_config('embedding_url'),
+         'https://api.siliconflow.cn/v1/embeddings',
+         ve_config('embedding_url')
+       );
+
+SELECT is(
+         ve_config('embedding_api_key'),
+         'sk-gjvlkbiknbooainxppvsdheqyxxagzqfgaawnsbjlailjmst',
+         ve_config('embedding_api_key')
+       );
+
+SELECT is(
+         ve_config('embedding_model'),
+         'BAAI/bge-m3',
+         ve_config('embedding_model')
+       );
 
 CREATE TABLE test_table (
     id SERIAL PRIMARY KEY,
