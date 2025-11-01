@@ -22,7 +22,7 @@ jobs:
       run: |
         pig ext add pgtap -y
         pig ext add http -y
-        pig ext add pg_vector -y
+        pig ext add vector -y
         pig ext add pg_background -y
 
     - name: Start PostgreSQL
