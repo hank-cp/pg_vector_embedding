@@ -7,7 +7,7 @@
 
 PostgreSQL extension for automatic vector embedding using external embedding services.
 
-[中文文档](README.zh-cn.md)
+[中文文档](README.zh-CN.md)
 
 ## Features
 
