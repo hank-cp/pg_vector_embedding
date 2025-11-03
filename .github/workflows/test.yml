@@ -32,12 +32,17 @@ jobs:
         gosu postgres /usr/lib/postgresql/17/bin/initdb -D /var/lib/postgresql/data
         gosu postgres /usr/lib/postgresql/17/bin/pg_ctl -D /var/lib/postgresql/data start -w
 
+    - name: Start Mock Embedding Server
+      run: |
+        python3 test/mock_embedding_server.py 8080 &
+        sleep 2
+        echo "Mock embedding server started on port 8080"
+
     - name: Setup test environment
-      env:
-        SILICONFLOW_API_KEY: ${{ secrets.SILICONFLOW_API_KEY }}
       run: |
         cp test/.env.example test/.env
-        sed -i "s/your-api-key/$SILICONFLOW_API_KEY/g" test/.env
+        sed -i "s|https://api.siliconflow.cn/v1/embeddings|http://localhost:8080/v1/embeddings|g" test/.env
+        sed -i "s/your-api-key/mock-api-key/g" test/.env
         echo "Test environment configured"
 
     - name: Run test script

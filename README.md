@@ -20,13 +20,15 @@ PostgreSQL extension for automatic vector embedding using external embedding ser
 ## Prerequisites
 
 - PostgreSQL 9.5+ with `vector` extension
-- `http` extension
-- `pg_background` extension
-- `pgTAP` extension (for testing)
+- [http](https://github.com/pramsey/pgsql-http) extension
+- [pg_background](https://github.com/vibhorkum/pg_background) extension
+- [pgTAP](https://pgtap.org/documentation.html) extension (for testing)
 
 ## Installation
 
 ```bash
+git clone https://github.com/hank-cp/pg_vector_embedding.git
+cd pg_vector_embedding
 make
 sudo make install
 ```
@@ -95,35 +97,7 @@ LIMIT 10;
 SELECT ve_disable('public', 'documents');
 ```
 
-## Functions
-
-### Configuration
-
-- `ve_config(key TEXT) RETURNS TEXT` - Get configuration value from database settings
-
-### Table Management
-
-- `ve_enable(schema TEXT, table TEXT, info_columns TEXT[], vector_column TEXT)` - Register table for auto-embedding
-- `ve_disable(schema TEXT, table TEXT)` - Unregister table
-
-### Embedding
-
-- `ve_compute_embedding(text TEXT) RETURNS VECTOR` - Compute embedding synchronously
-- `ve_compact_row_data(record ANYELEMENT, columns TEXT[]) RETURNS JSONB` - Extract specified columns to JSON
-- `ve_process_embedding(params JSONB)` - Process embedding for a specific record (used internally)
-
-### Internal Functions
-
-- `ve_trigger()` - Trigger function that launches background embedding tasks
-
 ## Testing
-
-### Run All Tests
-
-```bash
-cd test
-./runner.sh
-```
 
 ### Configure Test Environment
 
@@ -133,6 +107,13 @@ Create `test/.env` file:
 EMBEDDING_URL=https://api.siliconflow.cn/v1/embeddings
 EMBEDDING_API_KEY=your-api-key
 EMBEDDING_MODEL=BAAI/bge-m3
+```
+
+### Run All Tests
+
+```bash
+cd test
+./runner.sh
 ```
 
 ### Test Options
@@ -148,10 +129,9 @@ EMBEDDING_MODEL=BAAI/bge-m3
 ## Architecture
 
 1. **Trigger-based Detection**: When a registered table is modified, `ve_trigger()` captures the change
-2. **Column Extraction**: The trigger extracts configured info columns as JSON using `ve_compact_row_data()`
-3. **Background Processing**: A background worker is launched via `pg_background_launch()` to run `ve_process_embedding()`
-4. **API Call**: The background task calls the embedding service via `http` extension using `ve_compute_embedding()`
-5. **Storage**: The returned vector is saved to the configured vector column
+2. **Column Extraction**: The trigger extracts configured info columns as JSON using `ve_compact_row_data()`. Column comments will also be included in the JSON to improve embedding quality.
+3. **Background Processing**: A background worker will be launched to process the embedding request and update the vector column.
+4. **Storage**: The returned vector is saved to the configured vector column. It could be leveraged in vector similarity search, like RAG.
 
 ## Configuration Reference
 
@@ -220,6 +200,4 @@ LIMIT 5;
 2. Ensure table has a primary key (required for tracking records)
 3. Check trigger function exists: `\df ve_trigger`
 
-## License
-
-MIT
+## [License](LICENSE)
