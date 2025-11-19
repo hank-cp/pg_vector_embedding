@@ -38,7 +38,7 @@ sudo make install
 ### 1. Create Extension
 
 ```sql
-CREATE EXTENSION pg_vector_embedding CASCADE;
+CREATE EXTENSION IF NOT EXISTS pg_vector_embedding SCHEMA "public" CASCADE;
 ```
 
 ### 2. Configure Embedding Service

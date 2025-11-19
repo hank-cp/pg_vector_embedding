@@ -38,7 +38,7 @@ sudo make install
 ### 1. 创建扩展
 
 ```sql
-CREATE EXTENSION pg_vector_embedding CASCADE;
+CREATE EXTENSION IF NOT EXISTS pg_vector_embedding SCHEMA "public" CASCADE;
 ```
 
 ### 2. 配置嵌入服务
