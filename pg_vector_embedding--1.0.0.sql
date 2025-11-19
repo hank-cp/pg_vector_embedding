@@ -78,7 +78,7 @@ DECLARE
     v_type_category CHAR;
 BEGIN
     v_info_json := '{}'::jsonb;
-    
+
     v_table_oid := pg_typeof(p_record)::text::regclass::oid;
 
     FOREACH v_col IN ARRAY p_info_columns
@@ -87,16 +87,16 @@ BEGIN
         FROM pg_attribute a
         WHERE a.attrelid = v_table_oid
         AND a.attname = v_col;
-        
+
         SELECT t.typname, t.typcategory INTO v_type_name, v_type_category
         FROM pg_type t
         WHERE t.oid = v_col_type;
-        
+
         SELECT pg_catalog.col_description(v_table_oid, v_col_num) INTO v_comment;
-        
+
         IF v_type_name IN ('json', 'jsonb') THEN
             EXECUTE format('SELECT ($1).%I::JSONB', v_col) INTO v_value_jsonb USING p_record;
-            
+
             IF v_comment IS NOT NULL AND v_comment != '' THEN
                 v_info_json := v_info_json || jsonb_build_object(v_col, jsonb_build_object('_comment', v_comment, '_value', v_value_jsonb));
             ELSE
@@ -104,7 +104,7 @@ BEGIN
             END IF;
         ELSIF v_type_category = 'A' THEN
             EXECUTE format('SELECT to_jsonb(($1).%I)', v_col) INTO v_value_jsonb USING p_record;
-            
+
             IF v_comment IS NOT NULL AND v_comment != '' THEN
                 v_info_json := v_info_json || jsonb_build_object(v_col, jsonb_build_object('_comment', v_comment, '_value', v_value_jsonb));
             ELSE
@@ -112,7 +112,7 @@ BEGIN
             END IF;
         ELSE
             EXECUTE format('SELECT ($1).%I::TEXT', v_col) INTO v_value USING p_record;
-            
+
             IF v_comment IS NOT NULL AND v_comment != '' THEN
                 v_info_json := v_info_json || jsonb_build_object(v_col, v_comment || ': ' || v_value);
             ELSE
@@ -235,7 +235,7 @@ BEGIN
                 'pk_values', v_pk_values,
                 'info', v_info_json
             )::text
-        )
+            65536, 2)
     );
 
     RETURN NEW;

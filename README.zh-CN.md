@@ -45,9 +45,9 @@ CREATE EXTENSION IF NOT EXISTS pg_vector_embedding SCHEMA "public" CASCADE;
 
 ```sql
 -- 设置数据库级别配置
-ALTER SYSTEM SET pg_vector_embedding.embedding_url = 'https://api.siliconflow.cn/v1/embeddings';
-ALTER SYSTEM SET pg_vector_embedding.embedding_api_key = 'your-api-key';
-ALTER SYSTEM SET pg_vector_embedding.embedding_model = 'BAAI/bge-m3';
+ALTER DATABASE your_db SET pg_vector_embedding.embedding_url = 'https://api.siliconflow.cn/v1/embeddings';
+ALTER DATABASE your_db SET pg_vector_embedding.embedding_api_key = 'your-api-key';
+ALTER DATABASE your_db SET pg_vector_embedding.embedding_model = 'BAAI/bge-m3';
 -- 重启 Postgres 以应用设置
 ```
 
