@@ -33,9 +33,10 @@ jobs:
 
     - name: Install pg_background_queue extension
       run: |
+        cd /opt
         git clone https://github.com/hank-cp/pg_background_queue.git
         cd pg_background_queue
-        make && make install
+        make install
 
     - name: Start Mock Embedding Server
       run: |
