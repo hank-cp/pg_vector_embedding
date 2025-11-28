@@ -33,7 +33,6 @@ jobs:
 
     - name: Install pg_background_queue extension
       run: |
-        cp /opt/
         git clone https://github.com/hank-cp/pg_background_queue.git
         cd pg_background_queue
         make && make install
