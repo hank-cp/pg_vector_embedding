@@ -15,13 +15,13 @@ PostgreSQL extension for automatic vector embedding using external embedding ser
 - Register tables for automatic vector embedding on INSERT/UPDATE
 - Asynchronous embedding computation using background workers
 - Synchronous embedding function for queries
-- Based on `http` and `pg_background` extensions
+- Based on `http` and `pg_background_queue` extensions
 
 ## Prerequisites
 
 - PostgreSQL 9.5+ with `vector` extension
 - [http](https://github.com/pramsey/pgsql-http) extension
-- [pg_background](https://github.com/vibhorkum/pg_background) extension
+- [pg_background_queue](https://github.com/hank-cp/pg_background_queue) extension
 - [pgTAP](https://pgtap.org/documentation.html) extension (for testing)
 
 ## Installation

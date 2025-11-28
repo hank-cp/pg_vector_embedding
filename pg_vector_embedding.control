@@ -2,4 +2,4 @@ comment = 'Automatic vector embedding for PostgreSQL tables using external embed
 default_version = '1.0.0'
 module_pathname = '$libdir/pg_vector_embedding'
 relocatable = true
-requires = 'http,pg_background,vector'
+requires = 'http,pg_background_queue,vector'

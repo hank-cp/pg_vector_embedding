@@ -76,7 +76,7 @@ if [ -f "$ENV_FILE" ]; then
 
         if [ -n "$key" ] && [ -n "$value" ]; then
             # Convert EMBEDDING_URL to pg_vector_embedding.embedding_url
-            db_key=$(echo "$key" | tr '[:upper:]' '[:lower:]' | sed 's/^/pg_vector_embedding./')
+            db_key=$(echo "$key" | tr '[:upper:]' '[:lower:]' | sed "s/^/$TEST_NAME./")
             echo "Setting $db_key"
             $PSQL_CMD -d "$TEST_DB" -c "ALTER DATABASE $TEST_DB SET $db_key = '$value';" || true
         fi

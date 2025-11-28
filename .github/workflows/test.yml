@@ -23,7 +23,6 @@ jobs:
         pig ext add pgtap -y
         pig ext add http -y
         pig ext add vector -y
-        pig ext add pg_background -y
 
     - name: Start PostgreSQL
       run: |
@@ -31,6 +30,13 @@ jobs:
         chown -R postgres:postgres /var/lib/postgresql/data
         gosu postgres /usr/lib/postgresql/17/bin/initdb -D /var/lib/postgresql/data
         gosu postgres /usr/lib/postgresql/17/bin/pg_ctl -D /var/lib/postgresql/data start -w
+
+    - name: Install pg_background_queue extension
+      run: |
+        cp /opt/
+        git clone https://github.com/hank-cp/pg_background_queue.git
+        cd pg_background_queue
+        make && make install
 
     - name: Start Mock Embedding Server
       run: |

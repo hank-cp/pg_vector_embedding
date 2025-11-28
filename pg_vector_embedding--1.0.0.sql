@@ -224,7 +224,7 @@ BEGIN
         v_pk_values := v_pk_values || v_value;
     END LOOP;
 
-    PERFORM pg_background_launch(
+    PERFORM pg_background_enqueue(
         format(
             'SELECT ve_process_embedding(%L::jsonb)',
             jsonb_build_object(
@@ -234,8 +234,7 @@ BEGIN
                 'pk_columns', v_pk_columns,
                 'pk_values', v_pk_values,
                 'info', v_info_json
-            )::text
-            65536, 2)
+            )::text)
     );
 
     RETURN NEW;

@@ -21,7 +21,7 @@ PostgreSQL 扩展，用于使用外部嵌入服务自动生成向量嵌入。
 
 - PostgreSQL 9.5+ 及 `vector` 扩展
 - [http](https://github.com/pramsey/pgsql-http) 扩展
-- [pg_background](https://github.com/vibhorkum/pg_background) 扩展
+- [pg_background_queue](https://github.com/hank-cp/pg_background_queue) 扩展
 - [pgTAP](https://pgtap.org/documentation.html) 扩展（用于测试）
 
 ## 安装
@@ -80,7 +80,7 @@ INSERT INTO documents (title, content)
 VALUES ('PostgreSQL Extensions', 'Learn how to build powerful PostgreSQL extensions');
 ```
 
-嵌入将通过 `pg_background` 异步计算并存储在 `embedding` 列中。
+嵌入将通过 `pg_background_queue` 异步计算并存储在 `embedding` 列中。
 
 ### 6. 使用向量相似度查询
 
@@ -189,7 +189,7 @@ LIMIT 5;
 
 ### 嵌入未被计算
 
-1. 检查 `pg_background` 扩展是否已安装并正常工作
+1. 检查 `pg_background_queue` 扩展是否已安装并正常工作
 2. 验证数据库配置已设置且会话已重新连接
 3. 检查 PostgreSQL 日志中的后台工作进程错误
 4. 确保嵌入 API 可访问且凭据有效
