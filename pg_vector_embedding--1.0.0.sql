@@ -185,6 +185,7 @@ DECLARE
     v_info_columns TEXT[];
     v_vector_column TEXT;
     v_info_json JSONB;
+    v_old_info_json JSONB;
     v_col TEXT;
     v_value TEXT;
     v_task_id INTEGER;
@@ -193,6 +194,7 @@ DECLARE
     v_pk_columns TEXT[];
     v_pk_values TEXT[];
     v_pk_col TEXT;
+    v_should_update BOOLEAN;
 BEGIN
     v_schema := TG_TABLE_SCHEMA;
     v_table := TG_TABLE_NAME;
@@ -204,7 +206,28 @@ BEGIN
     v_info_columns := string_to_array(TG_ARGV[0], ',');
     v_vector_column := TG_ARGV[1];
 
-    v_info_json := ve_compact_row_data(NEW, v_info_columns);
+    -- 判断是否需要更新 vector
+    v_should_update := FALSE;
+    
+    IF TG_OP = 'INSERT' THEN
+        -- INSERT 操作：总是需要更新
+        v_should_update := TRUE;
+        v_info_json := ve_compact_row_data(NEW, v_info_columns);
+    ELSIF TG_OP = 'UPDATE' THEN
+        -- UPDATE 操作：只有当 info_columns 指定的列值发生变化时才更新
+        v_info_json := ve_compact_row_data(NEW, v_info_columns);
+        v_old_info_json := ve_compact_row_data(OLD, v_info_columns);
+        
+        -- 比较 JSONB 对象是否相等
+        IF v_info_json <> v_old_info_json THEN
+            v_should_update := TRUE;
+        END IF;
+    END IF;
+
+    -- 如果不需要更新，直接返回
+    IF NOT v_should_update THEN
+        RETURN NEW;
+    END IF;
 
     SELECT array_agg(a.attname ORDER BY array_position(i.indkey::int[], a.attnum))
     INTO v_pk_columns
